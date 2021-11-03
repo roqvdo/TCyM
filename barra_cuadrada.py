@@ -38,22 +38,35 @@ T_t.fill(T_initial) # ponemos todos los nodos a la temp inicial
 T_t[:, (L-1)] = T_left
 
 
-
 #Definimos la clase
 class Matrix:
-    _M = 0
-    _N = 0
+    _p = 0 # cantidad de nodos donde T es una incógnita
     _elem = None
 
+
 #vamos a inicializar los atributos del objeto
-    def __init__(self, M, N): 
-        self._M = M
-        self._N = N
+    def __init__(self, p):
+        '''
+        Inicializa una matriz cuadrada nula
+
+        '''
+        self._p = p
         self._elem = []
-        for i in range(self._M):
+        
+        for i in range(self._p):
             self._elem.append([])
-            for j in range(self.n):
+            for j in range(self.p):
                 self._elem[i].append(0)
-                
-        print(self._elem)
+    
+    def coeff_matrix(self, i, j):
+        '''
+        Reescribe el coeficiente en la posición (i,j)
+
+        '''
+        self.elem[i][j] = a
+        
+        for n == 0: # nodos inferiores
+            
+            
+        
         
