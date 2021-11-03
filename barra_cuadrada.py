@@ -40,6 +40,8 @@ T_t[:, (L-1)] = T_left
 
 #Definimos la clase
 class Matrix:
+    _x = M + 1
+    _y = N + 1
     _p = 0 # cantidad de nodos donde T es una incógnita
     _elem = None
 
@@ -58,14 +60,19 @@ class Matrix:
             for j in range(self.p):
                 self._elem[i].append(0)
     
-    def coeff_matrix(self, i, j):
+    def coeff_matrix(self, x, y):
         '''
-        Reescribe el coeficiente en la posición (i,j)
+        Reescribe los coeficientes de la matriz
+        en función de la posición del nodo
 
         '''
+        self._x = x
+        self._y = y
         self.elem[i][j] = a
         
-        for n == 0: # nodos inferiores
+       for m in range(self._x):
+           for n in range(self._y):
+              
             
             
         
