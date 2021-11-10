@@ -30,10 +30,10 @@ h = 25 # coeficiente de convección en W/m^2.ºC
 q_dot = 5000 # flujo de calor W/m^2
 L = 1 # longitud de la barra en m
 radio = 0.02 # radio de la barra en m
-delta_r = 0.025 # distancia entre nodos en m
+delta_r = 0.001 # distancia entre nodos en m
 delta_z = delta_r # nodos equiespaciados
-M = int(L // delta_r) # cantidad de secciones en x
-N = int(L // delta_z) # cantidad de secciones en y
+M = int(L // delta_z) # cantidad de secciones en z
+N = int(radio // delta_r) # cantidad de secciones en r
 
 # Parte temporal
 t = 600 # tiempo total en s
