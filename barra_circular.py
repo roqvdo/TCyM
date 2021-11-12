@@ -7,13 +7,13 @@ class Matrix:
         self._list_ec = list_ec
         
     def T_symb(self):
-        T = []
+       T = []
         
-        for i in range(self._num_var):
-            i = str(i)
-            Ti = sym.symbols('T' + i)
-            T.append(Ti)
-            return T
+       for i in range(self._num_var):
+          i = str(i)
+          Ti = sym.symbols('T' + i)
+          T.append(Ti)
+          return T
         
     def eqs_symb(self):
         eqs = []
@@ -44,11 +44,56 @@ T_amb = 20 # en ºC
 
 tau = (delta_r)**2 / (alpha * delta_t)
 
+# Red nodal de temperaturas
+for k in range(time_iter):
+    for m in range(M + 1):
+        for n in range(N + 1):
+            T = np.zeros((M + 1, N + 1))
+            
 
-for k in range(0, time_iter, 1):
-    for m in range(0, radio, delta_r):
-        for n in range(0, L, delta_z):
-            eq1 = -tau * t[k+1][m-1][n] - tau * t[k+1][m+1][n] - tau * t[k+1][m][n-1] - tau * t[k+1][m][n+1] + (4 * tau +1) * t[k+1][m][n] - t[k][m][n] 
+# Ecuaciones
+    # Nodos interiores
+eq1 = - tau * T[m-1][n][k+1] - tau * T[m+1][n][k+1]- tau * T[m][n-1][k+1]- tau * T[m][n+1][k+1] + (4 * tau + 1) * T[m][n][k+1] - T[m][n][k]
+    # Nodos frontera superiores
+eq2 = (((2 * tau * h * delta_r) / k) + (4 * tau + 1) * T[m][n][k+1] - 2 * tau * T[m][n-1][k+1] - tau * T[m-1][n][k+1] - tau * T[m+1][n][k+1] - ((2 * tau * h * delta_r) / k) * T_amb - T[m][n][k]
+    # Nodos frontera inferiores
+eq3 = - tau * T[m-1][n][k+1] + (4 * tau + 1) * T[m][n][k+1] - tau * T[m+1][n][k+1] - 2 * tau * T[m][n+1][k+1] - T[m][n][k]
+    # Nodos frontera izquiera
+eq4 = - 2 * tau * T[m+1][n][k] + (4 * tau + 1) * T[m][n][k+1]- tau * T[m][n+1][k+1] - ((2 * tau * q_dot * delta_r) / k) - T[m][n][k]
+    # Nodo inferior izquierdo
+eq5 = - 2 * tau * T[m+1][n][k] + (4 * tau + 1) * T[m][n][k+1] - 2 * tau * T[m][n+1][k+1] - ((2 * tau * q_dot * delta_r) / k) - T[m][n][k]
+    # Nodo
+
+
+
+# Creamos las variables simbólicas
+#num_var = (M + 1) * (N + 1)
+
+#T = []
+
+#for i in range(1, num_var):
+    #i = str(i)
+    #Ti = sym.symbols('T' + i)
+    #T.append(Ti)
+
+
+
+
+
+
+# Red nodal de temperaturas
+#for k in range(0, time_iter):
+   # grid = np.zeros((M + 1, N + 1))
+    
+    #if k == 0:
+     #   for m in range(0, M + 1):
+      #      for n in range(0, N + 1):
+       #         grid[m][n] = T_amb
+    #else:
+        
+        
+    
+        
 
 
      
