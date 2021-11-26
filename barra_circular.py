@@ -1,6 +1,5 @@
 import numpy as np
 import sympy as sym
-from sympy import *
 from sympy.matrices import Matrix 
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -41,13 +40,22 @@ M = int(L // delta_z) # cantidad de secciones en z
 N = int(radio // delta_r) # cantidad de secciones en r
 
 # Parte temporal
-t = 600 # tiempo total en s
+time = 3 # tiempo total en s
 delta_t = 1 # intervalo de tiempo
-time_iter = t // delta_t # iteraciones temporales
+time_iter = time // delta_t # iteraciones temporales
 
 T_amb = 20 # en ºC
 
 tau = (alpha * delta_t) / (delta_r)**2 
+
+def temp_solution(ecuaciones, T):
+    A, b = sym.linear_eq_to_matrix(ecuaciones, T)
+    system = (A, b)
+    T_k, = sym.linsolve(system, T) # la coma es para poder acceder a los elementos
+    solution = Matrix(T_k).reshape(M + 1, N + 1)
+    
+    return solution
+    
 
 # Red nodal para la temperatura inicial
 t = np.zeros((M + 1, N + 1))
@@ -101,45 +109,34 @@ for m in range(M + 1):
             E9 = (((4 * tau * h * delta_r) / k) + 8 * tau + 1) * g[m, n] - 4 * tau * g[m-1, n] - 4 * tau * g[m, n-1] - ((4 * tau * h * delta_r) / k) * T_amb - t[m][n]
             ecuaciones.append(E9)
             
-# Definimos la iteración para las temperaturas        
-def temp_iteration(time_iter):
-  for k in range(time_iter):
-    for m in range(M+1):
-      for n in range(N+1):
-        if k == 0:
-          t[m][n] = T_amb
-          A, b = sym.linear_eq_to_matrix(ecuaciones, T)
-          system = (A, b)
-          T_k, = sym.linsolve(system, T) # la coma es para poder acceder a los elementos
-          solution = Matrix(T_k).reshape(M+1,N+1)
-        else:
-          t[m][n] = solution[m][n]
-          A, b = sym.linear_eq_to_matrix(ecuaciones, T)
-          system = (A, b)
-          T_k, = sym.linsolve(system, T)
-          solution = Matrix(T_k).reshape(M+1,N+1)
-          
-  return solution
+# Iteración temporal
+for j in range(time_iter):
+    a = temp_solution(ecuaciones, T)
+    np.savetxt('temperaturas', a)
+    w = np.loadtxt('temperaturas')
+    for m in range(M + 1):
+        for n in range(N + 1):
+            t[m][n] = w[m][n]
         
     
-def plotheatmap(solution, time_iter):
-  plt.clf()
-  plt.title(f"Temperatura para t = {k*delta_t:.3f} segundos")
-  plt.xlabel("z")
-  plt.ylabel("r")
+#def plotheatmap(solution, time_iter):
+ # plt.clf()
+ # plt.title(f"Temperatura para t = {k*delta_t:.3f} segundos")
+ # plt.xlabel("z")
+ # plt.ylabel("r")
   
   # This is to plot solution (solution at time-step k)
-  plt.pcolormesh(solution, cmap=plt.cm.jet, vmin=0, vmax=100)
-  plt.colorbar()
+ # plt.pcolormesh(solution, cmap=plt.cm.jet, vmin=0, vmax=100)
+ # plt.colorbar()
   
-  return plt
+  #return plt
 
-solution = temp_iteration(time_iter)
+#solution = temp_iteration(time_iter)
 
-def animate(k):
-    plotheatmap(solution[k], k)
+#def animate(k):
+   # plotheatmap(solution[k], k)
 
-anim = animation.FuncAnimation(plt.figure(), animate, interval=1, frames=time_iter, repeat=False)
-anim.save("solucion_barra_cilindrica.gif")
+#anim = animation.FuncAnimation(plt.figure(), animate, interval=1, frames=time_iter, repeat=False)
+#anim.save("solucion_barra_cilindrica.gif")
 
      
