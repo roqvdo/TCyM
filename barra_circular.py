@@ -32,15 +32,15 @@ k = 63.9 # conductividad térmica en W/m.ºC
 alpha = 18.8E-6 # difusividad térmica en m^2/s
 h = 25 # coeficiente de convección en W/m^2.ºC
 q_dot = 5000 # flujo de calor W/m^2
-L = 1 # longitud de la barra en m
-radio = 0.02 # radio de la barra en m
+L = 0.05 # longitud de la barra en m
+radio = 0.015 # radio de la barra en m
 delta_r = 0.005 # distancia entre nodos en m
 delta_z = delta_r # nodos equiespaciados
 M = int(L // delta_z) # cantidad de secciones en z
 N = int(radio // delta_r) # cantidad de secciones en r
 
 # Parte temporal
-time = 3 # tiempo total en s
+time = 3600 # tiempo total en s
 delta_t = 1 # intervalo de tiempo
 time_iter = time // delta_t # iteraciones temporales
 
@@ -119,24 +119,21 @@ for j in range(time_iter):
             t[m][n] = w[m][n]
         
     
-#def plotheatmap(solution, time_iter):
- # plt.clf()
- # plt.title(f"Temperatura para t = {k*delta_t:.3f} segundos")
- # plt.xlabel("z")
- # plt.ylabel("r")
+def plotheatmap(w, time_iter):
+  plt.clf()
+  plt.title(f'Temperatura para t = {j * delta_t} segundos')
+  plt.xlabel('z')
+  plt.ylabel('r')
+
+  plt.pcolormesh(w)
+  plt.colorbar()
+
+  return plt
+
+def animate(j):
+  plotheatmap(w, j)
   
-  # This is to plot solution (solution at time-step k)
- # plt.pcolormesh(solution, cmap=plt.cm.jet, vmin=0, vmax=100)
- # plt.colorbar()
-  
-  #return plt
-
-#solution = temp_iteration(time_iter)
-
-#def animate(k):
-   # plotheatmap(solution[k], k)
-
-#anim = animation.FuncAnimation(plt.figure(), animate, interval=1, frames=time_iter, repeat=False)
-#anim.save("solucion_barra_cilindrica.gif")
+anim = animation.FuncAnimation(plt.figure(), animate, frames = time_iter, interval=1)
+anim.save("solucion_barra_cilindrica.gif")
 
      
